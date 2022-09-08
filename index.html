@@ -14,8 +14,10 @@
     <!-- Replace this with your image. Make sure CORS settings allow reading the image! -->
     <img id="img" src="cat.jpeg"></img>
     <div>
-        <h2>Predictions:</h2>
-        <h3 id="desc"></h3>
+        <h2>Predictions</h2>
+        <h3 id="loading">Loading...</h3>
+        <h3 id="name"></h3>
+        <h3 id="rate"></h3>
     </div>
 
     <!-- Place your code in the script tag below. You can also use an external .js file -->
@@ -24,16 +26,22 @@
     // available on the index-page because of the script tag above.
 
     const img = document.getElementById('img');
-
+    const loading = document.querySelector('#loading')
+    const name = document.querySelector('#name')
+    const rate = document.querySelector('#rate')
+    name.style.display = "none"
+    rate.style.display = "none"
     // Load the model.
     mobilenet.load().then(model => {
         // Classify the image.
         model.classify(img).then(predictions => {
-        console.log('Predictions: ');
-        console.log(predictions);
-        const descEl = document.querySelector('#desc')
-        descEl.textContent = `name: "${predictions[0].className}", probability: ${predictions[0].probability*100}%`
-        console.log(descEl)
+            loading.style.display = "none"
+            name.style.display = "block"
+            rate.style.display = "block"
+            console.log('Predictions: ');
+            console.log(predictions);
+            name.textContent = `name: ${predictions[0].className}`
+            rate.textContent = `probability: ${predictions[0].probability * 100}%`
         });
     });
     </script>
