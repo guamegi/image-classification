@@ -14,10 +14,11 @@
     <!-- Replace this with your image. Make sure CORS settings allow reading the image! -->
     <img id="img" src="cat.jpeg"></img>
     <div>
-        <h2>Predictions</h2>
+        <h2>Image Predictions</h2>
+        <hr />
+        <hr />
         <h3 id="loading">Loading...</h3>
-        <h3 id="name"></h3>
-        <h3 id="rate"></h3>
+        <div id="result"></div>
     </div>
 
     <!-- Place your code in the script tag below. You can also use an external .js file -->
@@ -25,23 +26,23 @@
     // Notice there is no 'import' statement. 'mobilenet' and 'tf' is
     // available on the index-page because of the script tag above.
 
+    const result = document.getElementById('result')
     const img = document.getElementById('img');
     const loading = document.querySelector('#loading')
-    const name = document.querySelector('#name')
-    const rate = document.querySelector('#rate')
-    name.style.display = "none"
-    rate.style.display = "none"
     // Load the model.
     mobilenet.load().then(model => {
         // Classify the image.
         model.classify(img).then(predictions => {
             loading.style.display = "none"
-            name.style.display = "block"
-            rate.style.display = "block"
+            let str = ""
+            predictions.forEach((el,idx) => {
+                let resultNum = el.probability*100
+                str += `<div><h3>${idx+1}. name: ${el.className}</h3><h3>probability: ${resultNum.toFixed(2)}%</h3></div><hr />`
+
+            })
+            result.innerHTML = str
             console.log('Predictions: ');
             console.log(predictions);
-            name.textContent = `name: ${predictions[0].className}`
-            rate.textContent = `probability: ${predictions[0].probability * 100}%`
         });
     });
     </script>
